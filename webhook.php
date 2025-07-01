@@ -1,5 +1,8 @@
 <?php
 
+// 记录开始时间
+$startTime = microtime(true);
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 // 配置信息
@@ -28,6 +31,13 @@ if (isset($update['message'])) {
         $responseText = '收到您的消息：' . $text;
     }
 
+    // 计算当前用时
+    $currentTime = microtime(true);
+    $currentExecutionTime = ($currentTime - $startTime) * 1000;
+    
+    // 在回复中添加处理用时
+    $responseText .= "\n\n处理用时: " . number_format($currentExecutionTime, 2) . 'ms';
+
     // 发送响应
     try {
         $response = $client->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
@@ -41,6 +51,21 @@ if (isset($update['message'])) {
     }
 }
 
+// 计算总用时
+$endTime = microtime(true);
+$executionTime = ($endTime - $startTime) * 1000; // 转换为毫秒
+
+// 记录执行时间到日志
+file_put_contents('performance_log.txt', 
+    date('Y-m-d H:i:s') . 
+    ' - 执行时间: ' . number_format($executionTime, 2) . 'ms' . 
+    "\n", 
+    FILE_APPEND
+);
+
 // 返回成功响应
 http_response_code(200);
-echo 'OK'; 
+echo json_encode([
+    'status' => 'OK',
+    'execution_time' => number_format($executionTime, 2) . 'ms'
+]); 
