@@ -6,7 +6,7 @@ $startTime = microtime(true);
 require_once __DIR__ . '/vendor/autoload.php';
 
 // 配置信息
-$botToken = 'YOUR_BOT_TOKEN'; // 替换为您的bot token
+$botToken = '8158437622:AAG0jnHHIVwi-KhuS0XQwHM24qnuPdcouzA'; // 替换为您的bot token
 
 // 获取传入的更新
 $update = json_decode(file_get_contents('php://input'), true);
